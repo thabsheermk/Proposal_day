@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Day | Beebs</title>
+    <style>
+        :root {
+            --primary-rose: #ff4d6d;
+            --deep-rose: #800f2f;
+            --gold: #ffb703;
+            --soft-pink: #fff0f3;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+            background: radial-gradient(circle at center, #800f2f 0%, #2b0610 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #proposal-screen, #success-screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            text-align: center;
+        }
+
+        #success-screen { display: none; }
+
+        .main-gif {
+            width: 320px;
+            border-radius: 30px;
+            filter: drop-shadow(0 0 20px var(--primary-rose));
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.8);
+        }
+
+        .btn-wrap {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        .btn {
+            font-weight: bold;
+            border-radius: 100px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        #yes-btn {
+            padding: 20px 60px;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--primary-rose), #c9184a);
+            color: white;
+            z-index: 10;
+        }
+
+        #no-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: #eee;
+            color: #333;
+            transition: all 0.1s ease-out; /* Smooth but fast */
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: fixed;
+            top: -10%;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="proposal-screen">
+        <img src="https://media.tenor.com/7D62X9V7hXAAAAAi/milk-and-mocha-bear-propose.gif" class="main-gif">
+        <h1>Will you be my Valentine, Beebs?</h1>
+        <div class="btn-wrap">
+            <button id="yes-btn" class="btn" onclick="celebrate()">YES! 💖</button>
+            <button id="no-btn" class="btn" onmouseover="handleNo()" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <div id="success-screen">
+        <img src="https://media.tenor.com/9796Y96Gf7AAAAAi/milk-and-mocha-bear-cuddling.gif" style="width: 400px; border-radius: 20px;">
+        <h1 style="color: var(--gold); font-size: 4rem;">I knew you'd say Yes! ❤️</h1>
+        <p style="font-size: 1.5rem;">I know you love me Beebs!</p>
+    </div>
+
+    <script>
+        let sizeMultiplier = 1;
+        
+        function handleNo() {
+            const noBtn = document.getElementById('no-btn');
+            
+            // 1. Make it smaller
+            sizeMultiplier *= 0.75; 
+            const newWidth = Math.max(1, 120 * sizeMultiplier);
+            const newHeight = Math.max(1, 50 * sizeMultiplier);
+            const newFontSize = Math.max(0, 1.2 * sizeMultiplier);
+            
+            noBtn.style.width = newWidth + 'px';
+            noBtn.style.height = newHeight + 'px';
+            noBtn.style.fontSize = newFontSize + 'rem';
+            noBtn.style.padding = (15 * sizeMultiplier) + 'px ' + (40 * sizeMultiplier) + 'px';
+
+            // 2. Make it fly
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+        }
+
+        function celebrate() {
+            document.getElementById('proposal-screen').style.display = 'none';
+            document.getElementById('success-screen').style.display = 'flex';
+            setInterval(spawnHeart, 100);
+        }
+
+        function spawnHeart() {
+            const symbols = ['🌹', '💖', '✨', '🧸'];
+            const h = document.createElement('div');
+            h.className = 'petal';
+            h.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            h.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }
+
+        setInterval(() => {
+            if(document.getElementById('success-screen').style.display !== 'flex') spawnHeart();
+        }, 1000);
+    </script>
+</body>
+</html>
